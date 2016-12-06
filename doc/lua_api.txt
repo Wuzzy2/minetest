@@ -4083,6 +4083,28 @@ The Biome API is still in an experimental phase and subject to change.
                                       -- Returns boolean success and text output.
     }
 
+#### Parameter syntax guidelines
+
+Please use the following syntax for the parameter description:
+
+* `<param>`: Placeholder for parameter `param`
+* `[text]`: `text` is optional
+* `[<param>]`: Optional parameter `param`
+* `text1 | text2 | text3`: Alternation: One of text1, text2 or text3
+* `(word1 word2) | (word3 word4)` Use round brackets to group multiple words
+  together for the alternation
+* All other text is literal
+
+Other guidelines:
+
+* Program your command in a way so that its parameter syntax is simple
+* Use the simplest possible command description which is still complete
+* Avoid special characters in your parameter syntax
+
+Special characters:
+
+    <>[]()
+
 ### Detached inventory callbacks
 
     {

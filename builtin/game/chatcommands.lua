@@ -70,7 +70,7 @@ end
 --
 core.register_chatcommand("me", {
 	params = "<action>",
-	description = "chat action (eg. /me orders a pizza)",
+	description = "Write \"<Your name> <action>\" into chat, e.g. \"celeron55 orders a pizza.\"",
 	privs = {shout=true},
 	func = function(name, param)
 		core.chat_send_all("* " .. name .. " " .. param)
@@ -91,7 +91,7 @@ core.register_chatcommand("admin", {
 
 core.register_chatcommand("help", {
 	privs = {},
-	params = "[all/privs/<cmd>]",
+	params = "[all | privs | <cmd>]",
 	description = "Get help for commands or list privileges",
 	func = function(name, param)
 		local function format_help_line(cmd, def)
@@ -145,8 +145,8 @@ core.register_chatcommand("help", {
 })
 
 core.register_chatcommand("privs", {
-	params = "<name>",
-	description = "print out privileges of player",
+	params = "[<name>]",
+	description = "Print out privileges of player or your own",
 	func = function(caller, param)
 		param = param:trim()
 		local name = (param ~= "" and param or caller)
@@ -269,7 +269,7 @@ core.register_chatcommand("revoke", {
 
 core.register_chatcommand("setpassword", {
 	params = "<name> <password>",
-	description = "set given password",
+	description = "Set password of a player",
 	privs = {password=true},
 	func = function(name, param)
 		local toname, raw_password = string.match(param, "^([^ ]+) +(.+)$")
@@ -307,7 +307,7 @@ core.register_chatcommand("setpassword", {
 
 core.register_chatcommand("clearpassword", {
 	params = "<name>",
-	description = "set empty password",
+	description = "Set empty password for a player",
 	privs = {password=true},
 	func = function(name, param)
 		local toname = param
@@ -333,7 +333,7 @@ core.register_chatcommand("auth_reload", {
 })
 
 core.register_chatcommand("teleport", {
-	params = "<X>,<Y>,<Z> | <to_name> | <name> <X>,<Y>,<Z> | <name> <to_name>",
+	params = "(<X>,<Y>,<Z>) | <to_name> | (<name> <X>,<Y>,<Z>) | (<name> <to_name>)",
 	description = "teleport to given position",
 	privs = {teleport=true},
 	func = function(name, param)
@@ -441,8 +441,8 @@ core.register_chatcommand("teleport", {
 })
 
 core.register_chatcommand("set", {
-	params = "[-n] <name> <value> | <name>",
-	description = "set or read server configuration setting",
+	params = "<name> | ([-n] <name> <value>)",
+	description = "Set or read server configuration setting",
 	privs = {server=true},
 	func = function(name, param)
 		local arg, setname, setvalue = string.match(param, "(-[n]) ([^ ]+) (.+)")
@@ -497,7 +497,7 @@ end
 
 core.register_chatcommand("emergeblocks", {
 	params = "(here [radius]) | (<pos1> <pos2>)",
-	description = "starts loading (or generating, if inexistent) map blocks "
+	description = "Starts loading (or generating, if inexistent) map blocks"
 		.. "contained in area pos1 to pos2",
 	privs = {server=true},
 	func = function(name, param)
@@ -523,7 +523,7 @@ core.register_chatcommand("emergeblocks", {
 
 core.register_chatcommand("deleteblocks", {
 	params = "(here [radius]) | (<pos1> <pos2>)",
-	description = "delete map blocks contained in area pos1 to pos2",
+	description = "Delete map blocks contained in area from pos1 to pos2",
 	privs = {server=true},
 	func = function(name, param)
 		local p1, p2 = parse_range_str(name, param)
@@ -587,7 +587,7 @@ end
 
 core.register_chatcommand("give", {
 	params = "<name> <ItemString>",
-	description = "give item to player",
+	description = "Give item to player",
 	privs = {give=true},
 	func = function(name, param)
 		local toname, itemstring = string.match(param, "^([^ ]+) +(.+)$")
@@ -600,7 +600,7 @@ core.register_chatcommand("give", {
 
 core.register_chatcommand("giveme", {
 	params = "<ItemString>",
-	description = "give item to yourself",
+	description = "Give item to yourself",
 	privs = {give=true},
 	func = function(name, param)
 		local itemstring = string.match(param, "(.+)$")
@@ -670,7 +670,7 @@ core.register_on_punchnode(function(pos, node, puncher)
 end)
 
 core.register_chatcommand("rollback_check", {
-	params = "[<range>] [<seconds>] [limit]",
+	params = "[<range>] [<seconds>] [<limit>]",
 	description = "Check who has last touched a node or near it,"
 			.. " max. <seconds> ago (default range=0,"
 			.. " seconds=86400=24h, limit=5)",
@@ -723,8 +723,8 @@ core.register_chatcommand("rollback_check", {
 })
 
 core.register_chatcommand("rollback", {
-	params = "<player name> [<seconds>] | :<actor> [<seconds>]",
-	description = "revert actions of a player; default for <seconds> is 60",
+	params = "<player name> | :<actor> [<seconds>]",
+	description = "Revert actions of a player; default for <seconds> is 60",
 	privs = {rollback=true},
 	func = function(name, param)
 		if not core.setting_getbool("enable_rollback_recording") then
@@ -769,7 +769,7 @@ core.register_chatcommand("status", {
 
 core.register_chatcommand("time", {
 	params = "<0..23>:<0..59> | <0..24000>",
-	description = "set time of day",
+	description = "Set time of day",
 	privs = {},
 	func = function(name, param)
 		if param == "" then
@@ -815,7 +815,7 @@ core.register_chatcommand("days", {
 })
 
 core.register_chatcommand("shutdown", {
-	description = "shutdown server",
+	description = "Shutdown server",
 	privs = {server=true},
 	func = function(name, param)
 		core.log("action", name .. " shuts down server")
@@ -846,7 +846,7 @@ core.register_chatcommand("ban", {
 
 core.register_chatcommand("unban", {
 	params = "<name/ip>",
-	description = "remove IP ban",
+	description = "Remove IP ban",
 	privs = {ban=true},
 	func = function(name, param)
 		if not core.unban_player_or_ip(param) then
@@ -858,8 +858,8 @@ core.register_chatcommand("unban", {
 })
 
 core.register_chatcommand("kick", {
-	params = "<name> [reason]",
-	description = "kick a player",
+	params = "<name> [<reason>]",
+	description = "Kick a player",
 	privs = {kick=true},
 	func = function(name, param)
 		local tokick, reason = param:match("([^ ]+) (.+)")
@@ -923,7 +923,7 @@ core.register_chatcommand("msg", {
 })
 
 core.register_chatcommand("last-login", {
-	params = "[name]",
+	params = "[<name>]",
 	description = "Get the last login time of a player",
 	func = function(name, param)
 		if param == "" then
