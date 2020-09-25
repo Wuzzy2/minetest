@@ -97,3 +97,15 @@ Usage:
 
 * Punch entity to increase visual size
 * Sneak+punch entity to decrease visual size
+
+## Node Meta Editor
+Edit metadata of nodes
+
+Usage:
+
+* Place on node to view and edit metadata
+* If node has a special rightclick action, press Sneak+Place instead
+* Click "Get value" to display the value of the key entered in the "Key" field
+* Click "Set value" to set the value to the specified key in the "Key" field
+* The list "Current keys" shows a list of keys with non-empty values, for
+  convenience. Select an entry to see its value
