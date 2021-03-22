@@ -1114,8 +1114,8 @@ void Server::handleCommand_Interact(NetworkPacket *pkt)
 		u16 src_original_hp = pointed_object->getHP();
 		u16 dst_origin_hp = playersao->getHP();
 
-		u16 wear = pointed_object->punch(dir, &toolcap, playersao,
-				time_from_last_punch);
+		u32 wear = pointed_object->punch(dir, &toolcap, playersao,
+				time_from_last_punch, tool_item.wear);
 
 		// Callback may have changed item, so get it again
 		playersao->getWieldedItem(&selected_item);
@@ -1180,7 +1180,8 @@ void Server::handleCommand_Interact(NetworkPacket *pkt)
 
 			// Get diggability and expected digging time
 			DigParams params = getDigParams(m_nodedef->get(n).groups,
-					&selected_item.getToolCapabilities(m_itemdef));
+					&selected_item.getToolCapabilities(m_itemdef),
+					selected_item.wear);
 			// If can't dig, try hand
 			if (!params.diggable) {
 				params = getDigParams(m_nodedef->get(n).groups,

@@ -177,7 +177,7 @@ int ObjectRef::l_punch(lua_State *L)
 	u16 src_original_hp = sao->getHP();
 	u16 dst_origin_hp = puncher->getHP();
 
-	u16 wear = sao->punch(dir, &toolcap, puncher, time_from_last_punch);
+	u32 wear = sao->punch(dir, &toolcap, puncher, time_from_last_punch);
 	lua_pushnumber(L, wear);
 
 	// If the punched is a player, and its HP changed
