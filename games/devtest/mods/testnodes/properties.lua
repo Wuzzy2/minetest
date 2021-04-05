@@ -68,6 +68,10 @@ minetest.register_node("testnodes:nojump_walkable", {
 	tiles = {"testnodes_nojump_top.png"},
 })
 
+local climbable_nodebox = {
+	type = "regular",
+}
+
 -- Climbable up and down with jump and sneak keys
 minetest.register_node("testnodes:climbable", {
 	description = S("Climbable Node"),
@@ -78,8 +82,9 @@ minetest.register_node("testnodes:climbable", {
 	paramtype = "light",
 	sunlight_propagates = true,
 	is_ground_content = false,
-	tiles ={"testnodes_climbable_side.png"},
-	drawtype = "glasslike",
+	tiles = {"testnodes_climbable_top.png","testnodes_climbable_top.png","testnodes_climbable_side.png"},
+	drawtype = "nodebox",
+	node_box = climbable_nodebox,
 	groups = {dig_immediate=3},
 })
 
@@ -90,8 +95,36 @@ minetest.register_node("testnodes:climbable_nojump", {
 	walkable = false,
 
 	groups = {disable_jump=1, dig_immediate=3},
-	drawtype = "glasslike",
-	tiles ={"testnodes_climbable_nojump_side.png"},
+	drawtype = "nodebox",
+	node_box = climbable_nodebox,
+	tiles = {"testnodes_climbable_nojump_top.png","testnodes_climbable_nojump_top.png","testnodes_climbable_nojump_side.png"},
+	paramtype = "light",
+	sunlight_propagates = true,
+})
+
+
+minetest.register_node("testnodes:climbable_nodescend", {
+	description = S("Upwards-climbable Node"),
+	climbable = true,
+	walkable = false,
+
+	groups = {disable_descend=1, dig_immediate=3},
+	drawtype = "nodebox",
+	node_box = climbable_nodebox,
+	tiles = {"testnodes_climbable_nodescend_top.png","testnodes_climbable_nodescend_top.png","testnodes_climbable_nodescend_side.png"},
+	paramtype = "light",
+	sunlight_propagates = true,
+})
+
+minetest.register_node("testnodes:climbable_nodescend_nojump", {
+	description = S("Non-climbable Node"),
+	climbable = true,
+	walkable = false,
+
+	groups = {disable_jump=1, disable_descend=1, dig_immediate=3},
+	drawtype = "nodebox",
+	node_box = climbable_nodebox,
+	tiles = {"testnodes_climbable_noclimb_top.png","testnodes_climbable_noclimb_top.png","testnodes_climbable_noclimb_side.png"},
 	paramtype = "light",
 	sunlight_propagates = true,
 })
@@ -118,7 +151,6 @@ minetest.register_node("testnodes:liquid_nojump", {
 	paramtype = "light",
 	pointable = false,
 	liquids_pointable = true,
-	buildable_to = true,
 	is_ground_content = false,
 	post_effect_color = {a = 70, r = 255, g = 0, b = 200},
 })
@@ -147,10 +179,67 @@ minetest.register_node("testnodes:liquidflowing_nojump", {
 	paramtype2 = "flowingliquid",
 	pointable = false,
 	liquids_pointable = true,
-	buildable_to = true,
 	is_ground_content = false,
 	post_effect_color = {a = 70, r = 255, g = 0, b = 200},
 })
+
+-- A liquid in which you can't actively descend.
+-- Note: You'll still descend slowly by doing nothing.
+minetest.register_node("testnodes:liquid_nodescend", {
+	description = S("No-descending Liquid Source Node"),
+	liquidtype = "source",
+	liquid_range = 0,
+	liquid_viscosity = 0,
+	liquid_alternative_flowing = "testnodes:liquidflowing_nodescend",
+	liquid_alternative_source = "testnodes:liquid_nodescend",
+	liquid_renewable = false,
+	groups = {disable_descend=1, dig_immediate=3},
+	walkable = false,
+
+	drawtype = "liquid",
+	tiles = {"testnodes_liquidsource.png^[colorize:#FFFF00:127"},
+	special_tiles = {
+		{name = "testnodes_liquidsource.png^[colorize:#FFFF00:127", backface_culling = false},
+		{name = "testnodes_liquidsource.png^[colorize:#FFFF00:127", backface_culling = true},
+	},
+	use_texture_alpha = "blend",
+	paramtype = "light",
+	pointable = false,
+	liquids_pointable = true,
+	is_ground_content = false,
+	post_effect_color = {a = 70, r = 255, g = 255, b = 200},
+})
+
+-- A liquid in which you can't actively descend (flowing variant)
+minetest.register_node("testnodes:liquidflowing_nodescend", {
+	description = S("No-descending Flowing Liquid Node"),
+	liquidtype = "flowing",
+	liquid_range = 1,
+	liquid_viscosity = 0,
+	liquid_alternative_flowing = "testnodes:liquidflowing_nodescend",
+	liquid_alternative_source = "testnodes:liquid_nodescend",
+	liquid_renewable = false,
+	groups = {disable_descend=1, dig_immediate=3},
+	walkable = false,
+
+
+	drawtype = "flowingliquid",
+	tiles = {"testnodes_liquidflowing.png^[colorize:#FFFF00:127"},
+	special_tiles = {
+		{name = "testnodes_liquidflowing.png^[colorize:#FFFF00:127", backface_culling = false},
+		{name = "testnodes_liquidflowing.png^[colorize:#FFFF00:127", backface_culling = false},
+	},
+	use_texture_alpha = "blend",
+	paramtype = "light",
+	paramtype2 = "flowingliquid",
+	pointable = false,
+	liquids_pointable = true,
+	is_ground_content = false,
+	post_effect_color = {a = 70, r = 255, g = 255, b = 200},
+})
+
+
+
 
 -- Nodes that modify fall damage (various damage modifiers)
 for i=-100, 100, 25 do
