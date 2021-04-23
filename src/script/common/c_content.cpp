@@ -121,6 +121,8 @@ void read_item_definition(lua_State* L, int index,
 			def.node_placement_prediction);
 
 	getintfield(L, index, "place_param2", def.place_param2);
+
+	getboolfield(L, index, "wallmounted_rotate_vertical", def.wallmounted_rotate_vertical);
 }
 
 /******************************************************************************/
@@ -180,6 +182,8 @@ void push_item_definition_full(lua_State *L, const ItemDefinition &i)
 	lua_setfield(L, -2, "sound_place_failed");
 	lua_pushstring(L, i.node_placement_prediction.c_str());
 	lua_setfield(L, -2, "node_placement_prediction");
+	lua_pushboolean(L, i.wallmounted_rotate_vertical);
+	lua_setfield(L, -2, "wallmounted_rotate_vertical");
 }
 
 /******************************************************************************/
