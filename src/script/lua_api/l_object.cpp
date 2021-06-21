@@ -1632,6 +1632,8 @@ int ObjectRef::l_hud_get_flags(lua_State *L)
 	lua_setfield(L, -2, "minimap");
 	lua_pushboolean(L, player->hud_flags & HUD_FLAG_MINIMAP_RADAR_VISIBLE);
 	lua_setfield(L, -2, "minimap_radar");
+	lua_pushboolean(L, player->hud_flags & HUD_FLAG_CHEATY_DEBUG_VISIBLE);
+	lua_setfield(L, -2, "cheaty_debug");
 	return 1;
 }
 

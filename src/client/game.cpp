@@ -2245,24 +2245,31 @@ void Game::toggleDebug()
 	// The debug text can be in 2 modes: minimal and basic.
 	// * Minimal: Only technical client info that not gameplay-relevant
 	// * Basic: Info that might give gameplay advantage, e.g. pos, angle
-	// Basic mode is used when player has "basic_debug" priv,
-	// otherwise the Minimal mode is used.
+	// Basic mode is used when player has "cheaty_debug" HUD flag set
+	// and/or the "basic_debug" privilege.
+	// Otherwise the Minimal mode is used.
+
+	u32 hud_flags = client->getEnv().getLocalPlayer()->hud_flags;
+	bool flag = hud_flags & HUD_FLAG_CHEATY_DEBUG_VISIBLE;
+	bool priv = client->checkPrivilege("basic_debug");
+	bool basicMode = flag || priv;
+
 	if (!m_game_ui->m_flags.show_minimal_debug) {
 		m_game_ui->m_flags.show_minimal_debug = true;
-		if (client->checkPrivilege("basic_debug")) {
+		if (basicMode) {
 			m_game_ui->m_flags.show_basic_debug = true;
 		}
 		m_game_ui->m_flags.show_profiler_graph = false;
 		draw_control->show_wireframe = false;
 		m_game_ui->showTranslatedStatusText("Debug info shown");
 	} else if (!m_game_ui->m_flags.show_profiler_graph && !draw_control->show_wireframe) {
-		if (client->checkPrivilege("basic_debug")) {
+		if (basicMode) {
 			m_game_ui->m_flags.show_basic_debug = true;
 		}
 		m_game_ui->m_flags.show_profiler_graph = true;
 		m_game_ui->showTranslatedStatusText("Profiler graph shown");
 	} else if (!draw_control->show_wireframe && client->checkPrivilege("debug")) {
-		if (client->checkPrivilege("basic_debug")) {
+		if (basicMode) {
 			m_game_ui->m_flags.show_basic_debug = true;
 		}
 		m_game_ui->m_flags.show_profiler_graph = false;
@@ -2273,7 +2280,7 @@ void Game::toggleDebug()
 		m_game_ui->m_flags.show_basic_debug = false;
 		m_game_ui->m_flags.show_profiler_graph = false;
 		draw_control->show_wireframe = false;
-		if (client->checkPrivilege("debug")) {
+		if (basicMode) {
 			m_game_ui->showTranslatedStatusText("Debug info, profiler graph, and wireframe hidden");
 		} else {
 			m_game_ui->showTranslatedStatusText("Debug info and profiler graph hidden");
