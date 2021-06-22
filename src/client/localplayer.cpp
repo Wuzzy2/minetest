@@ -444,6 +444,8 @@ void LocalPlayer::move(f32 dtime, Environment *env, f32 pos_max_d,
 	m_disable_jump = itemgroup_get(f.groups, "disable_jump") ||
 		itemgroup_get(f1.groups, "disable_jump");
 	m_can_jump = ((touching_ground && !is_climbing) || sneak_can_jump) && !m_disable_jump;
+	m_disable_descend = itemgroup_get(f.groups, "disable_descend") ||
+		itemgroup_get(f1.groups, "disable_descend");
 
 	// Jump key pressed while jumping off from a bouncy block
 	if (m_can_jump && control.jump && itemgroup_get(f.groups, "bouncy") &&
@@ -520,10 +522,10 @@ void LocalPlayer::applyControl(float dtime, Environment *env)
 					speedV.Y = -movement_speed_fast;
 				else
 					speedV.Y = -movement_speed_walk;
-			} else if (in_liquid || in_liquid_stable) {
+			} else if ((in_liquid || in_liquid_stable) && !m_disable_descend) {
 				speedV.Y = -movement_speed_walk;
 				swimming_vertical = true;
-			} else if (is_climbing) {
+			} else if (is_climbing && !m_disable_descend) {
 				speedV.Y = -movement_speed_climb;
 			} else {
 				// If not free movement but fast is allowed, aux1 is
@@ -551,13 +553,13 @@ void LocalPlayer::applyControl(float dtime, Environment *env)
 					speedV.Y = -movement_speed_fast;
 				else
 					speedV.Y = -movement_speed_walk;
-			} else if (in_liquid || in_liquid_stable) {
+			} else if ((in_liquid || in_liquid_stable) && !m_disable_descend) {
 				if (fast_climb)
 					speedV.Y = -movement_speed_fast;
 				else
 					speedV.Y = -movement_speed_walk;
 				swimming_vertical = true;
-			} else if (is_climbing) {
+			} else if (is_climbing && !m_disable_descend) {
 				if (fast_climb)
 					speedV.Y = -movement_speed_fast;
 				else
@@ -1057,6 +1059,7 @@ void LocalPlayer::old_move(f32 dtime, Environment *env, f32 pos_max_d,
 	// Determine if jumping is possible
 	m_disable_jump = itemgroup_get(f.groups, "disable_jump");
 	m_can_jump = touching_ground && !m_disable_jump;
+	m_disable_descend = itemgroup_get(f.groups, "disable_descend");
 
 	// Jump key pressed while jumping off from a bouncy block
 	if (m_can_jump && control.jump && itemgroup_get(f.groups, "bouncy") &&
