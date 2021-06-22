@@ -403,6 +403,7 @@ void ContentFeatures::reset()
 	palette_name = "";
 	palette = NULL;
 	node_dig_prediction = "air";
+	climb_factor = 1.0;
 }
 
 void ContentFeatures::setAlphaFromLegacy(u8 legacy_alpha)
@@ -512,9 +513,11 @@ void ContentFeatures::serialize(std::ostream &os, u16 protocol_version) const
 	writeU8(os, legacy_facedir_simple);
 	writeU8(os, legacy_wallmounted);
 
+	// late additions
 	os << serializeString16(node_dig_prediction);
 	writeU8(os, leveled_max);
 	writeU8(os, alpha);
+	writeF32(os, climb_factor);
 }
 
 void ContentFeatures::deSerialize(std::istream &is)
@@ -618,6 +621,11 @@ void ContentFeatures::deSerialize(std::istream &is)
 		if (is.eof())
 			throw SerializationError("");
 		alpha = static_cast<enum AlphaMode>(tmp);
+
+		f32 ftmp = readF32(is);
+		if (is.eof())
+			throw SerializationError("");
+		climb_factor = ftmp;
 	} catch(SerializationError &e) {};
 }
 
