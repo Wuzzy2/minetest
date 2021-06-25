@@ -112,9 +112,6 @@ core.register_entity(":__builtin:falling_node", {
 			end
 			-- FIXME: solution needed for paramtype2 == "leveled"
 			local s = (def.visual_scale or 1) * SCALE
-			if def.drawtype == "mesh" then
-				s = s * 0.5
-			end
 			self.object:set_properties({
 				is_visible = true,
 				wield_item = itemstring,
