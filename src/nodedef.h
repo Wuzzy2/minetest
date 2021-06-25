@@ -97,13 +97,14 @@ enum NodeBoxType
 	NODEBOX_WALLMOUNTED, // Box for wall mounted nodes; (top, bottom, side)
 	NODEBOX_LEVELED, // Same as fixed, but with dynamic height from param2. for snow, ...
 	NODEBOX_CONNECTED, // optionally draws nodeboxes if a neighbor node attaches
+	NODEBOX_LEVELED_PLANTLIKE, // Same as leveled, but in sync with plantlike height
 };
 
 struct NodeBox
 {
 	enum NodeBoxType type;
 	// NODEBOX_REGULAR (no parameters)
-	// NODEBOX_FIXED, NODEBOX_LEVELED
+	// NODEBOX_FIXED, NODEBOX_LEVELED*
 	std::vector<aabb3f> fixed;
 	// NODEBOX_WALLMOUNTED
 	aabb3f wall_top;
@@ -124,7 +125,7 @@ struct NodeBox
 	std::vector<aabb3f> disconnected_right;
 	std::vector<aabb3f> disconnected;
 	std::vector<aabb3f> disconnected_sides;
-	// NODEBOX_LEVELED
+	// NODEBOX_LEVELED*
 	std::vector<aabb3f> leveled_fixed;
 
 	NodeBox()

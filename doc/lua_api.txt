@@ -1236,6 +1236,12 @@ A nodebox is defined as any of:
         leveled_fixed = box OR {box1, box2, ...} -- never changes
     }
     {
+        -- Same as leveled, but the box height is in sync with the 'plant'
+        -- of 'plantlike' nodes and is capped at height 1.484375 (-0.5+127/64)
+        type = "leveled_plantlike",
+        fixed, leveled_fixed = -- see above
+    }
+    {
         -- A box like the selection box for torches
         -- (wallmounted param2 is used, if applicable)
         type = "wallmounted",
