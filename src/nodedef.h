@@ -103,7 +103,7 @@ struct NodeBox
 {
 	enum NodeBoxType type;
 	// NODEBOX_REGULAR (no parameters)
-	// NODEBOX_FIXED
+	// NODEBOX_FIXED, NODEBOX_LEVELED
 	std::vector<aabb3f> fixed;
 	// NODEBOX_WALLMOUNTED
 	aabb3f wall_top;
@@ -124,6 +124,8 @@ struct NodeBox
 	std::vector<aabb3f> disconnected_right;
 	std::vector<aabb3f> disconnected;
 	std::vector<aabb3f> disconnected_sides;
+	// NODEBOX_LEVELED
+	std::vector<aabb3f> leveled_fixed;
 
 	NodeBox()
 	{ reset(); }
