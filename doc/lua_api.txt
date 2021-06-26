@@ -1237,8 +1237,17 @@ A nodebox is defined as any of:
     }
     {
         -- Same as leveled, but the box height is in sync with the 'plant'
-        -- of 'plantlike' nodes and is capped at height 1.484375 (-0.5+127/64)
+        -- of 'plantlike' nodes (steps of 1/16) and is capped at
+        -- height 1.484375 (-0.5+127/64).
         type = "leveled_plantlike",
+        fixed, leveled_fixed = -- see above
+    }
+    {
+        -- Same as leveled, but the box height is in sync with the graphical
+        -- representation of of 'plantlike_rooted' nodes (steps of 1/16).
+        -- The upper box bound begins at the surface of the base cube (1.0)
+        -- and is capped at height 1.484375 (-0.5+127/64).
+        type = "leveled_plantlike_rooted",
         fixed, leveled_fixed = -- see above
     }
     {
