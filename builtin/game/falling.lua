@@ -451,15 +451,34 @@ local function drop_attached_node(p)
 	end
 end
 
-function builtin_shared.check_attached_node(p, n)
+function builtin_shared.check_attached_node(p, n, group_rating)
 	local def = core.registered_nodes[n.name]
 	local d = vector.new()
-	if def.paramtype2 == "wallmounted" or
+	if group_rating == 3 then
+		-- always attach to floor
+		d.y = -1
+	elseif group_rating == 4 then
+		-- always attach to ceiling
+		d.y = 1
+	elseif group_rating == 2 then
+		if (def.paramtype2 == "facedir" or
+				def.paramtype2 == "colorfacedir") then
+			-- Attach to whatever facedir is "mounted to".
+			-- For facedir, this is where tile no. 5 point at.
+
+			-- The fallback vector here is in case 'facedir to dir' is nil due
+			-- to voxelmanip placing a wallmounted node without resetting a
+			-- pre-existing param2 value that is out-of-range for facedir.
+			-- The fallback vector corresponds to param2 = 0.
+			d = core.facedir_to_dir(n.param2) or vector.new(0, 0, 1)
+		end
+	elseif def.paramtype2 == "wallmounted" or
 			def.paramtype2 == "colorwallmounted" then
-		-- The fallback vector here is in case 'wallmounted to dir' is nil due
-		-- to voxelmanip placing a wallmounted node without resetting a
-		-- pre-existing param2 value that is out-of-range for wallmounted.
-		-- The fallback vector corresponds to param2 = 0.
+		-- Attach to whatever this node is "mounted to".
+		-- This where tile no. 2 points at.
+
+		-- The fallback vector here is used for the same reason as
+		-- for facedir nodes.
 		d = core.wallmounted_to_dir(n.param2) or vector.new(0, 1, 0)
 	else
 		d.y = -1
@@ -504,8 +523,9 @@ function core.check_single_for_falling(p)
 		end
 	end
 
-	if core.get_item_group(n.name, "attached_node") ~= 0 then
-		if not builtin_shared.check_attached_node(p, n) then
+	local an = core.get_item_group(n.name, "attached_node")
+	if an ~= 0 then
+		if not builtin_shared.check_attached_node(p, n, an) then
 			drop_attached_node(p)
 			return true
 		end

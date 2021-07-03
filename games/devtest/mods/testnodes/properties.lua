@@ -38,7 +38,6 @@ minetest.register_node("testnodes:attached", {
 	},
 	groups = { attached_node = 1, dig_immediate = 3 },
 })
-
 -- This node attaches to the side of a node and drops as item
 -- when the node it attaches to is gone.
 minetest.register_node("testnodes:attached_wallmounted", {
@@ -50,6 +49,46 @@ minetest.register_node("testnodes:attached_wallmounted", {
 		"testnodes_attachedw_side.png",
 	},
 	groups = { attached_node = 1, dig_immediate = 3 },
+})
+
+-- Wallmounted node that always attaches to the floor
+minetest.register_node("testnodes:attached_wallmounted_floor", {
+	description = S("Floor-Attached Wallmounted Node"),
+	paramtype2 = "wallmounted",
+	tiles = {
+		"testnodes_attached_top.png",
+		"testnodes_attached_bottom.png",
+		"testnodes_attached_side.png",
+	},
+	groups = { attached_node = 3, dig_immediate = 3 },
+	color = "green",
+})
+
+-- This node attaches to the ceiling and drops as item
+-- when the ceiling is gone.
+minetest.register_node("testnodes:attached_top", {
+	description = S("Ceiling-Attached Node"),
+	tiles = {
+		"testnodes_attached_bottom.png",
+		"testnodes_attached_top.png",
+		"testnodes_attached_side.png^[transformR180",
+	},
+	groups = { attached_node = 4, dig_immediate = 3 },
+})
+
+-- Same as wallmounted attached, but for facedir
+minetest.register_node("testnodes:attached_facedir", {
+	description = S("Facedir Attached Node"),
+	paramtype2 = "facedir",
+	tiles = {
+		"testnodes_attachedf_side.png^[transformR180",
+		"testnodes_attachedf_side.png",
+		"testnodes_attachedf_side.png^[transformR90",
+		"testnodes_attachedf_side.png^[transformR270",
+		"testnodes_attachedf_bottom.png",
+		"testnodes_attachedf_top.png",
+	},
+	groups = { attached_node = 2, dig_immediate = 3 },
 })
 
 -- Jump disabled
