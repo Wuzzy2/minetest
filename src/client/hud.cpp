@@ -1007,8 +1007,14 @@ void drawItemStack(
 	// Render as mesh if animated or no inventory image
 	if ((enable_animations && rotation_kind < IT_ROT_NONE) || def.inventory_image.empty()) {
 		ItemMesh *imesh = client->idef()->getWieldMesh(def.name, client);
-		if (!imesh || !imesh->mesh)
-			return;
+	if (!imesh || !imesh->mesh) {
+		video::ITexture *texture = driver->getTexture("no_texture.png");
+		video::SColor color = video::SColor(255, 255, 255, 255);
+		const video::SColor colors[] = { color, color, color, color };
+		draw2DImageFilterScaled(driver, texture, rect,
+			core::rect<s32>({0, 0}, core::dimension2di(texture->getOriginalSize())),
+			clip, colors, true);
+	} else {
 		scene::IMesh *mesh = imesh->mesh;
 		driver->clearBuffers(video::ECBF_DEPTH);
 		s32 delta = 0;
@@ -1098,6 +1104,7 @@ void drawItemStack(
 		driver->setViewPort(oldViewPort);
 
 		draw_overlay = def.type == ITEM_NODE && def.inventory_image.empty();
+	}
 	} else { // Otherwise just draw as 2D
 		video::ITexture *texture = client->idef()->getInventoryTexture(def.name, client);
 		if (!texture)
