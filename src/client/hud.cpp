@@ -1007,104 +1007,109 @@ void drawItemStack(
 	// Render as mesh if animated or no inventory image
 	if ((enable_animations && rotation_kind < IT_ROT_NONE) || def.inventory_image.empty()) {
 		ItemMesh *imesh = client->idef()->getWieldMesh(def.name, client);
-	if (!imesh || !imesh->mesh) {
-		video::ITexture *texture = driver->getTexture("no_texture.png");
-		video::SColor color = video::SColor(255, 255, 255, 255);
-		const video::SColor colors[] = { color, color, color, color };
-		draw2DImageFilterScaled(driver, texture, rect,
-			core::rect<s32>({0, 0}, core::dimension2di(texture->getOriginalSize())),
-			clip, colors, true);
-	} else {
-		scene::IMesh *mesh = imesh->mesh;
-		driver->clearBuffers(video::ECBF_DEPTH);
-		s32 delta = 0;
-		if (rotation_kind < IT_ROT_NONE) {
-			MeshTimeInfo &ti = rotation_time_infos[rotation_kind];
-			if (mesh != ti.mesh && rotation_kind != IT_ROT_OTHER) {
-				ti.mesh = mesh;
-				ti.time = porting::getTimeMs();
-			} else {
-				delta = porting::getDeltaMs(ti.time, porting::getTimeMs()) % 100000;
+		if (!imesh || !imesh->mesh) {
+			video::ITexture *texture = driver->getTexture("no_texture.png");
+			video::SColor color = video::SColor(255, 255, 255, 255);
+			const video::SColor colors[] = { color, color, color, color };
+			draw2DImageFilterScaled(driver, texture, rect,
+				core::rect<s32>({0, 0},
+				core::dimension2di(texture->getOriginalSize())),
+				clip, colors, true);
+		} else {
+			scene::IMesh *mesh = imesh->mesh;
+			driver->clearBuffers(video::ECBF_DEPTH);
+			s32 delta = 0;
+			if (rotation_kind < IT_ROT_NONE) {
+				MeshTimeInfo &ti = rotation_time_infos[rotation_kind];
+				if (mesh != ti.mesh && rotation_kind != IT_ROT_OTHER) {
+					ti.mesh = mesh;
+					ti.time = porting::getTimeMs();
+				} else {
+					delta = porting::getDeltaMs(ti.time,
+						porting::getTimeMs()) % 100000;
+				}
 			}
-		}
-		core::rect<s32> oldViewPort = driver->getViewPort();
-		core::matrix4 oldProjMat = driver->getTransform(video::ETS_PROJECTION);
-		core::matrix4 oldViewMat = driver->getTransform(video::ETS_VIEW);
-		core::rect<s32> viewrect = rect;
-		if (clip)
-			viewrect.clipAgainst(*clip);
+			core::rect<s32> oldViewPort = driver->getViewPort();
+			core::matrix4 oldProjMat =
+				driver->getTransform(video::ETS_PROJECTION);
+			core::matrix4 oldViewMat =
+				driver->getTransform(video::ETS_VIEW);
+			core::rect<s32> viewrect = rect;
+			if (clip)
+				viewrect.clipAgainst(*clip);
 
-		core::matrix4 ProjMatrix;
-		ProjMatrix.buildProjectionMatrixOrthoLH(2.0f, 2.0f, -1.0f, 100.0f);
+			core::matrix4 ProjMatrix;
+			ProjMatrix.buildProjectionMatrixOrthoLH(2.0f, 2.0f, -1.0f, 100.0f);
 
-		core::matrix4 ViewMatrix;
-		ViewMatrix.buildProjectionMatrixOrthoLH(
-			2.0f * viewrect.getWidth() / rect.getWidth(),
-			2.0f * viewrect.getHeight() / rect.getHeight(),
-			-1.0f,
-			100.0f);
-		ViewMatrix.setTranslation(core::vector3df(
-			1.0f * (rect.LowerRightCorner.X + rect.UpperLeftCorner.X -
-					viewrect.LowerRightCorner.X - viewrect.UpperLeftCorner.X) /
-					viewrect.getWidth(),
-			1.0f * (viewrect.LowerRightCorner.Y + viewrect.UpperLeftCorner.Y -
-					rect.LowerRightCorner.Y - rect.UpperLeftCorner.Y) /
-					viewrect.getHeight(),
-			0.0f));
+			core::matrix4 ViewMatrix;
+			ViewMatrix.buildProjectionMatrixOrthoLH(
+				2.0f * viewrect.getWidth() / rect.getWidth(),
+				2.0f * viewrect.getHeight() / rect.getHeight(),
+				-1.0f,
+				100.0f);
+			ViewMatrix.setTranslation(core::vector3df(
+				1.0f * (rect.LowerRightCorner.X + rect.UpperLeftCorner.X -
+						viewrect.LowerRightCorner.X -
+						viewrect.UpperLeftCorner.X) /
+						viewrect.getWidth(),
+				1.0f * (viewrect.LowerRightCorner.Y + viewrect.UpperLeftCorner.Y -
+						rect.LowerRightCorner.Y - rect.UpperLeftCorner.Y) /
+						viewrect.getHeight(),
+				0.0f));
 
-		driver->setTransform(video::ETS_PROJECTION, ProjMatrix);
-		driver->setTransform(video::ETS_VIEW, ViewMatrix);
+			driver->setTransform(video::ETS_PROJECTION, ProjMatrix);
+			driver->setTransform(video::ETS_VIEW, ViewMatrix);
 
-		core::matrix4 matrix;
-		matrix.makeIdentity();
+			core::matrix4 matrix;
+			matrix.makeIdentity();
 
-		if (enable_animations) {
-			float timer_f = (float) delta / 5000.f;
-			matrix.setRotationDegrees(v3f(
-				angle.X + rotation_speed.X * 3.60f * timer_f,
-				angle.Y + rotation_speed.Y * 3.60f * timer_f,
-				angle.Z + rotation_speed.Z * 3.60f * timer_f)
-			);
-		}
-
-		driver->setTransform(video::ETS_WORLD, matrix);
-		driver->setViewPort(viewrect);
-
-		video::SColor basecolor =
-			client->idef()->getItemstackColor(item, client);
-
-		u32 mc = mesh->getMeshBufferCount();
-		for (u32 j = 0; j < mc; ++j) {
-			scene::IMeshBuffer *buf = mesh->getMeshBuffer(j);
-			// we can modify vertices relatively fast,
-			// because these meshes are not buffered.
-			assert(buf->getHardwareMappingHint_Vertex() == scene::EHM_NEVER);
-			video::SColor c = basecolor;
-
-			if (imesh->buffer_colors.size() > j) {
-				ItemPartColor *p = &imesh->buffer_colors[j];
-				if (p->override_base)
-					c = p->color;
+			if (enable_animations) {
+				float timer_f = (float) delta / 5000.f;
+				matrix.setRotationDegrees(v3f(
+					angle.X + rotation_speed.X * 3.60f * timer_f,
+					angle.Y + rotation_speed.Y * 3.60f * timer_f,
+					angle.Z + rotation_speed.Z * 3.60f * timer_f)
+				);
 			}
 
-			if (imesh->needs_shading)
-				colorizeMeshBuffer(buf, &c);
-			else
-				setMeshBufferColor(buf, c);
+			driver->setTransform(video::ETS_WORLD, matrix);
+			driver->setViewPort(viewrect);
 
-			video::SMaterial &material = buf->getMaterial();
-			material.MaterialType = video::EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
-			material.Lighting = false;
-			driver->setMaterial(material);
-			driver->drawMeshBuffer(buf);
+			video::SColor basecolor =
+				client->idef()->getItemstackColor(item, client);
+
+			u32 mc = mesh->getMeshBufferCount();
+			for (u32 j = 0; j < mc; ++j) {
+				scene::IMeshBuffer *buf = mesh->getMeshBuffer(j);
+				// we can modify vertices relatively fast,
+				// because these meshes are not buffered.
+				assert(buf->getHardwareMappingHint_Vertex() == scene::EHM_NEVER);
+				video::SColor c = basecolor;
+
+				if (imesh->buffer_colors.size() > j) {
+					ItemPartColor *p = &imesh->buffer_colors[j];
+					if (p->override_base)
+						c = p->color;
+				}
+
+				if (imesh->needs_shading)
+					colorizeMeshBuffer(buf, &c);
+				else
+					setMeshBufferColor(buf, c);
+
+				video::SMaterial &material = buf->getMaterial();
+				material.MaterialType = video::EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
+				material.Lighting = false;
+				driver->setMaterial(material);
+				driver->drawMeshBuffer(buf);
+			}
+
+			driver->setTransform(video::ETS_VIEW, oldViewMat);
+			driver->setTransform(video::ETS_PROJECTION, oldProjMat);
+			driver->setViewPort(oldViewPort);
+
+			draw_overlay = def.type == ITEM_NODE && def.inventory_image.empty();
 		}
-
-		driver->setTransform(video::ETS_VIEW, oldViewMat);
-		driver->setTransform(video::ETS_PROJECTION, oldProjMat);
-		driver->setViewPort(oldViewPort);
-
-		draw_overlay = def.type == ITEM_NODE && def.inventory_image.empty();
-	}
 	} else { // Otherwise just draw as 2D
 		video::ITexture *texture = client->idef()->getInventoryTexture(def.name, client);
 		if (!texture)
