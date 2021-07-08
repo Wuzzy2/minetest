@@ -618,7 +618,7 @@ u8 MapNode::getLevel(const NodeDefManager *nodemgr) const
 	// todo: after update in all games leave only if (f.param_type_2 ==
 	if(f.liquid_type == LIQUID_SOURCE)
 		return LIQUID_LEVEL_SOURCE;
-	if (f.param_type_2 == CPT2_FLOWINGLIQUID)
+	if (f.param_type_2 == CPT2_FLOWINGLIQUID || f.param_type_2 == CPT2_COLORED_FLOWINGLIQUID)
 		return getParam2() & LIQUID_LEVEL_MASK;
 	if(f.liquid_type == LIQUID_FLOWING) // can remove if all param_type_2 setted
 		return getParam2() & LIQUID_LEVEL_MASK;
@@ -638,6 +638,7 @@ s8 MapNode::setLevel(const NodeDefManager *nodemgr, s16 level)
 	s8 rest = 0;
 	const ContentFeatures &f = nodemgr->get(*this);
 	if (f.param_type_2 == CPT2_FLOWINGLIQUID
+			|| f.param_type_2 == CPT2_COLORED_FLOWINGLIQUID
 			|| f.liquid_type == LIQUID_FLOWING
 			|| f.liquid_type == LIQUID_SOURCE) {
 		if (level <= 0) { // liquid can’t exist with zero level
