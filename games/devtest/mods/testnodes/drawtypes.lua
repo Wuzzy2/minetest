@@ -442,6 +442,52 @@ for r = 0, 8 do
 
 end
 
+-- Colored liquid test (drawtype only)
+
+minetest.register_node("testnodes:liquid_color", {
+	description = S("Colored Source Liquid Drawtype Test Node"),
+	drawtype = "liquid",
+	paramtype = "light",
+	paramtype2 = "color",
+	palette = "testnodes_palette_liquid.png",
+	tiles = {
+		"testnodes_liquidsource_color.png",
+	},
+	special_tiles = {
+		{name="testnodes_liquidsource_color.png", backface_culling=false},
+		{name="testnodes_liquidsource_color.png", backface_culling=true},
+	},
+	use_texture_alpha = "blend",
+
+
+	walkable = false,
+	liquid_alternative_flowing = "testnodes:liquid_flowing_color",
+	liquid_alternative_source = "testnodes:liquid_color",
+	groups = { dig_immediate = 3 },
+})
+minetest.register_node("testnodes:liquid_flowing_color", {
+	description = S("Colored Flowing Liquid Drawtype Test Node"),
+	drawtype = "flowingliquid",
+	paramtype = "light",
+	paramtype2 = "colorflowingliquid",
+	palette = "testnodes_palette_flowingliquid.png",
+	tiles = {
+		"testnodes_liquidflowing_color.png",
+	},
+	special_tiles = {
+		{name="testnodes_liquidflowing_color.png", backface_culling=false},
+		{name="testnodes_liquidflowing_color.png", backface_culling=false},
+	},
+	use_texture_alpha = "blend",
+
+
+	walkable = false,
+	liquid_alternative_flowing = "testnodes:liquid_flowing_color",
+	liquid_alternative_source = "testnodes:liquid_color",
+	groups = { dig_immediate = 3 },
+})
+
+
 -- Waving liquid test (drawtype only)
 minetest.register_node("testnodes:liquid_waving", {
 	description = S("Waving Source Liquid Drawtype Test Node"),

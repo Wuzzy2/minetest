@@ -3486,7 +3486,8 @@ bool Game::nodePlacement(const ItemDefinition &selected_def,
 	// Apply color
 	if (!place_param2 && (predicted_f.param_type_2 == CPT2_COLOR
 			|| predicted_f.param_type_2 == CPT2_COLORED_FACEDIR
-			|| predicted_f.param_type_2 == CPT2_COLORED_WALLMOUNTED)) {
+			|| predicted_f.param_type_2 == CPT2_COLORED_WALLMOUNTED
+			|| predicted_f.param_type_2 == CPT2_COLORED_FLOWINGLIQUID)) {
 		const auto &indexstr = selected_item.metadata.
 			getString("palette_index", 0);
 		if (!indexstr.empty()) {
@@ -3499,6 +3500,9 @@ bool Game::nodePlacement(const ItemDefinition &selected_def,
 			} else if (predicted_f.param_type_2 == CPT2_COLORED_FACEDIR) {
 				// param2 = pure palette index + other
 				param2 = (index & 0xe0) | (param2 & 0x1f);
+			} else if (predicted_f.param_type_2 == CPT2_COLORED_FLOWINGLIQUID) {
+				// param2 = pure palette index + other
+				param2 = (index & 0xf0) | (param2 & 0x0f);
 			}
 		}
 	}

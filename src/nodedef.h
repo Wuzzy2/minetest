@@ -81,6 +81,8 @@ enum ContentParamType2
 	CPT2_GLASSLIKE_LIQUID_LEVEL,
 	// 3 bits of palette index, then degrotate
 	CPT2_COLORED_DEGROTATE,
+	// 4 bits of palette index, then flowingliquid
+	CPT2_COLORED_FLOWINGLIQUID,
 };
 
 enum LiquidType

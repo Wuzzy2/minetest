@@ -720,6 +720,13 @@ appropriate `paramtype2`:
       first (= 0 + 1) pixel will be picked from the palette.
     * `param2 = 35` is 1 * 32 + 3, so the rotation is 3 and the
       second (= 1 + 1) pixel will be picked from the palette.
+* `paramtype2 = "colorflowingliquid"` for nodes which use the first
+  four bits of `param2` for palette indexing. The remaining four bits
+  are describing the flowing liquid level as in `flowingliquid` paramtype2.
+  Division by 16 yields the palette index (without stretching the
+  palette). These nodes can have 16 different colors, and the palette
+  should contain 16 pixels.
+
 
 To colorize a node on the map, set its `param2` value (according
 to the node's paramtype2).
@@ -1093,6 +1100,10 @@ The function of `param2` is determined by `paramtype2` in node definition.
     * The first (most-significant) three bits of `param2` tells which color
       is picked from the palette. The palette should have 8 pixels.
     * Remaining 5 bits store rotation in range 0–23 (i.e. in 15° steps)
+* `paramtype2 = "colorflowingliquid"`
+    * Same as `flowingliquid`, but with colors.
+    * The first four bits of `param2` tells which color is picked from the
+      palette. The palette should have 16 pixels.
 * `paramtype2 = "none"`
     * `param2` will not be used by the engine and can be used to store
       an arbitrary value
