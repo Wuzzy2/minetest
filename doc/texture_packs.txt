@@ -90,7 +90,6 @@ by texture packs. All existing fallback textures can be found in the directory
 * `minimap_mask_square.png`: mask used for the square minimap
 * `minimap_overlay_round.png`: overlay texture for the round minimap
 * `minimap_overlay_square.png`: overlay texture for the square minimap
-* `no_texture_airlike.png`: fallback inventory image for airlike nodes
 * `object_marker_red.png`: texture for players on the minimap
 * `player_marker.png`: texture for the own player on the square minimap
 
@@ -111,6 +110,8 @@ by texture packs. All existing fallback textures can be found in the directory
 * `unknown_item.png`: shown texture when an item definition was not found
 * `unknown_node.png`: shown texture when a node definition was not found
 * `unknown_object.png`: shown texture when an entity definition was not found
+* `no_texture_airlike.png`: fallback inventory image for airlike nodes
+* `no_texture.png`: fallback image for unspecified textures
 
 * `wieldhand.png`: texture of the wieldhand
 
