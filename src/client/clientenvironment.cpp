@@ -204,7 +204,8 @@ void ClientEnvironment::step(float dtime)
 			// Liquid floating / sinking
 			if (lplayer->in_liquid && !lplayer->swimming_vertical &&
 					!lplayer->swimming_pitch)
-				speed.Y -= lplayer->movement_liquid_sink * dtime_part * 2.0f;
+				speed.Y -= lplayer->movement_liquid_sink *
+					lplayer->physics_override_liquid_sink * dtime_part * 2.0f;
 
 			// Liquid resistance
 			if (lplayer->in_liquid_stable || lplayer->in_liquid) {
@@ -212,11 +213,15 @@ void ClientEnvironment::step(float dtime)
 				// between 0 and 1. Should match the scale at which viscosity
 				// increase affects other liquid attributes.
 				static const f32 viscosity_factor = 0.3f;
+				float fluidity = lplayer->movement_liquid_fluidity;
+				fluidity *= lplayer->physics_override_liquid_fluidity;
+				float fluidity_smooth = lplayer->movement_liquid_fluidity_smooth;
+				fluidity_smooth *= lplayer->physics_override_liquid_fluidity_smooth;
 
-				v3f d_wanted = -speed / lplayer->movement_liquid_fluidity;
+				v3f d_wanted = -speed / fluidity;
 				f32 dl = d_wanted.getLength();
-				if (dl > lplayer->movement_liquid_fluidity_smooth)
-					dl = lplayer->movement_liquid_fluidity_smooth;
+				if (dl > fluidity_smooth)
+					dl = fluidity_smooth;
 
 				dl *= (lplayer->liquid_viscosity * viscosity_factor) +
 					(1 - viscosity_factor);

@@ -220,6 +220,10 @@ public:
 	float m_physics_override_speed = 1.0f;
 	float m_physics_override_jump = 1.0f;
 	float m_physics_override_gravity = 1.0f;
+	float m_physics_override_speed_climb = 1.0;
+	float m_physics_override_liquid_fluidity = 1.0;
+	float m_physics_override_liquid_fluidity_smooth = 1.0;
+	float m_physics_override_liquid_sink = 1.0;
 	bool m_physics_override_sneak = true;
 	bool m_physics_override_sneak_glitch = false;
 	bool m_physics_override_new_move = true;

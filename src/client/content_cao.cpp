@@ -1736,6 +1736,10 @@ void GenericCAO::processMessage(const std::string &data)
 		bool sneak_glitch = !readU8(is);
 		bool new_move = !readU8(is);
 
+		float override_speed_climb = readF32(is);
+		float override_liquid_fluidity = readF32(is);
+		float override_liquid_fluidity_smooth = readF32(is);
+		float override_liquid_sink = readF32(is);
 
 		if(m_is_local_player)
 		{
@@ -1746,6 +1750,10 @@ void GenericCAO::processMessage(const std::string &data)
 			player->physics_override_sneak = sneak;
 			player->physics_override_sneak_glitch = sneak_glitch;
 			player->physics_override_new_move = new_move;
+			player->physics_override_speed_climb = override_speed_climb;
+			player->physics_override_liquid_fluidity = override_liquid_fluidity;
+			player->physics_override_liquid_fluidity_smooth = override_liquid_fluidity_smooth;
+			player->physics_override_liquid_sink = override_liquid_sink;
 		}
 	} else if (cmd == AO_CMD_SET_ANIMATION) {
 		// TODO: change frames send as v2s32 value

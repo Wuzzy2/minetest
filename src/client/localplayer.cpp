@@ -524,7 +524,7 @@ void LocalPlayer::applyControl(float dtime, Environment *env)
 				speedV.Y = -movement_speed_walk;
 				swimming_vertical = true;
 			} else if (is_climbing) {
-				speedV.Y = -movement_speed_climb;
+				speedV.Y = -movement_speed_climb * physics_override_speed_climb;
 			} else {
 				// If not free movement but fast is allowed, aux1 is
 				// "Turbo button"
@@ -561,7 +561,7 @@ void LocalPlayer::applyControl(float dtime, Environment *env)
 				if (fast_climb)
 					speedV.Y = -movement_speed_fast;
 				else
-					speedV.Y = -movement_speed_climb;
+					speedV.Y = -movement_speed_climb * physics_override_speed_climb;
 			}
 		}
 	}
@@ -626,7 +626,7 @@ void LocalPlayer::applyControl(float dtime, Environment *env)
 			if (fast_climb)
 				speedV.Y = movement_speed_fast;
 			else
-				speedV.Y = movement_speed_climb;
+				speedV.Y = movement_speed_climb * physics_override_speed_climb;
 		}
 	}
 
