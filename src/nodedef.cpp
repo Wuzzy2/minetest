@@ -1044,9 +1044,8 @@ void NodeDefManager::clear()
 		f.name = "unknown";
 		TileDef unknownTile;
 		unknownTile.name = "unknown_node.png";
-		for (int t=0; t<6; t++) {
+		for (int t = 0; t < 6; t++)
 			f.tiledef[t] = unknownTile;
-		}
 		// Insert directly into containers
 		content_t c = CONTENT_UNKNOWN;
 		m_content_features[c] = f;

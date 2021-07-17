@@ -1008,7 +1008,7 @@ void drawItemStack(
 	if ((enable_animations && rotation_kind < IT_ROT_NONE) || def.inventory_image.empty()) {
 		ItemMesh *imesh = client->idef()->getWieldMesh(def.name, client);
 		if (!imesh || !imesh->mesh) {
-			video::ITexture *texture = driver->getTexture("no_texture.png");
+			video::ITexture *texture = client->tsrc()->getTexture("no_texture.png");
 			video::SColor color = video::SColor(255, 255, 255, 255);
 			const video::SColor colors[] = { color, color, color, color };
 			draw2DImageFilterScaled(driver, texture, rect,
@@ -1030,10 +1030,8 @@ void drawItemStack(
 				}
 			}
 			core::rect<s32> oldViewPort = driver->getViewPort();
-			core::matrix4 oldProjMat =
-				driver->getTransform(video::ETS_PROJECTION);
-			core::matrix4 oldViewMat =
-				driver->getTransform(video::ETS_VIEW);
+			core::matrix4 oldProjMat = driver->getTransform(video::ETS_PROJECTION);
+			core::matrix4 oldViewMat = driver->getTransform(video::ETS_VIEW);
 			core::rect<s32> viewrect = rect;
 			if (clip)
 				viewrect.clipAgainst(*clip);
