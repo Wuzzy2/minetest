@@ -1740,6 +1740,8 @@ void GenericCAO::processMessage(const std::string &data)
 		float override_liquid_fluidity = readF32(is);
 		float override_liquid_fluidity_smooth = readF32(is);
 		float override_liquid_sink = readF32(is);
+		float override_acceleration_default = readF32(is);
+		float override_acceleration_air = readF32(is);
 
 		if(m_is_local_player)
 		{
@@ -1754,6 +1756,8 @@ void GenericCAO::processMessage(const std::string &data)
 			player->physics_override_liquid_fluidity = override_liquid_fluidity;
 			player->physics_override_liquid_fluidity_smooth = override_liquid_fluidity_smooth;
 			player->physics_override_liquid_sink = override_liquid_sink;
+			player->physics_override_acceleration_default = override_acceleration_default;
+			player->physics_override_acceleration_air = override_acceleration_air;
 		}
 	} else if (cmd == AO_CMD_SET_ANIMATION) {
 		// TODO: change frames send as v2s32 value

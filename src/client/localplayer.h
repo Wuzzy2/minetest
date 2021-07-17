@@ -72,6 +72,8 @@ public:
 	float physics_override_liquid_fluidity = 1.0f;
 	float physics_override_liquid_fluidity_smooth = 1.0f;
 	float physics_override_liquid_sink = 1.0f;
+	float physics_override_acceleration_default = 1.0f;
+	float physics_override_acceleration_air = 1.0f;
 
 	void move(f32 dtime, Environment *env, f32 pos_max_d);
 	void move(f32 dtime, Environment *env, f32 pos_max_d,
