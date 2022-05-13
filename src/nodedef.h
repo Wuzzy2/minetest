@@ -538,9 +538,15 @@ public:
 	 * if the given content type is not registered.
 	 */
 	inline const ContentFeatures& get(content_t c) const {
-		return
-			c < m_content_features.size() ?
-				m_content_features[c] : m_content_features[CONTENT_UNKNOWN];
+		if (c < m_content_features.size()) {
+			if (m_content_features[c].name == "") {
+				return m_content_features[CONTENT_UNKNOWN];
+			} else {
+				return m_content_features[c];
+			}
+		} else {
+			return m_content_features[CONTENT_UNKNOWN];
+		}
 	}
 
 	/*!
